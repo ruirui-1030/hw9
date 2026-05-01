@@ -81,6 +81,6 @@ your-repo/
 本系統針對本地開發與測試設計：
 1. 建立並啟動 Python 虛擬環境 (`.venv`)。
 2. 開發者於本地啟動 FastAPI 伺服器 (`uvicorn app:app --reload`)，服務預設運行於 port 8000。
-3. 另開終端機使用 `ngrok http 8000` 建立安全隧道，獲取公網 HTTPS URL。
+3. 另開終端機使用 `ngrok http 80` 建立安全隧道，獲取公網 HTTPS URL。
 4. 將獲取的 HTTPS URL 加上 `/callback` 註冊至 LINE Developers Console 的 Webhook URL 欄位。
 5. 於 LINE Developers Console 進行「Verify」驗證，成功後即可掃描 QR Code 加機器人為好友進行測試。
