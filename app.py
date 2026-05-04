@@ -9,7 +9,7 @@ from google import genai
 from linebot.v3 import WebhookHandler
 from linebot.v3.exceptions import InvalidSignatureError
 from linebot.v3.messaging import Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage
-from linebot.v3.webhook import MessageEvent, TextMessageContent
+from linebot.v3.webhooks import MessageEvent, TextMessageContent
 
 # 載入環境變數
 load_dotenv()
@@ -96,8 +96,9 @@ def handle_message(event):
             reply_text = response.text if response.text else "抱歉，目前 AI 分析師無法產生回覆，請稍後再試。"
             
     except Exception as e:
-        print(f"Gemini API Error: {e}")
-        reply_text = "抱歉，目前 AI 分析師正在休息中，請稍後再試。"
+        import traceback
+        print(f"Gemini API Error: {traceback.format_exc()}")
+        reply_text = f"抱歉，目前 AI 分析師正在休息中，請稍後再試。\n詳細錯誤：{e}"
 
     # 回傳訊息給使用者
     with ApiClient(configuration) as api_client:

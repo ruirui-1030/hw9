@@ -97,8 +97,8 @@ ngrok http 8000
 
 ## 心得報告
 
-**姓名**：
-**學號**：
+**姓名**：林瑞城
+**學號**：D1123896
 
 **Q1. 你在 `/linebot-implement` Skill 的「注意事項」寫了哪些規則？為什麼這樣寫？**
 
@@ -110,13 +110,16 @@ ngrok http 8000
 
 **Q2. 你的 Skill 第一次執行後，AI 產出的程式直接能跑嗎？需要修改哪些地方？修改後有沒有更新 Skill？**
 
-> 基本上幾乎一次就能跑。因為在 `linebot-implement` 的 Skill 中已經明確定義了 v3 SDK 的所有初始化與 Webhook 流程，並清楚要求使用 Gemini 與 SQLite，所以 AI 生成的程式碼很精確，可以直接執行而無需大幅度修改。我也將 SQLite 的建表邏輯直接整合進腳本中，讓系統更完整。
+> 第一次產出的程式碼架構非常完整，但有一個小 bug 需要修改：
+> AI 產生的 `from linebot.v3.webhook import ...` 少寫了 `s`，正確應該是 `linebot.v3.webhooks`，這導致了 `ImportError` 無法啟動。後來透過 AI 檢查並修正了這行程式碼才順利跑起來。此外，原本程式就已經完美整合了 SQLite 的建表邏輯，這點非常方便。
 
 ---
 
 **Q3. 你遇到什麼問題是 AI 沒辦法自己解決、需要你介入處理的？**
 
-> 取得 LINE Channel Access Token 與 Secret 以及 Gemini API Key 的動作，必須手動進入 LINE Developers Console 與 Google AI Studio 申請並設定到 `.env` 檔案中。此外，將本地端服務公開到網際網路（如設定 ngrok 並貼到 Webhook URL 上）也是需要手動操作的步驟。
+> 除了金鑰申請與 ngrok/localtunnel 的設定必須手動處理外，我在實際測試時還遇到了兩個 AI 無法自動排除的「環境陷阱」，需要我和 AI 一起來回 Debug：
+> 1. **環境變數快取問題**：我換了新的 Gemini API Key 到 `.env`，但因為 Uvicorn 伺服器沒有徹底重啟，導致它一直吃到舊的無效金鑰，不斷回覆我自訂的錯誤訊息。
+> 2. **localtunnel 斷線**：免費的通道軟體因為閒置而自動關閉，導致 LINE 傳送的訊息根本進不到我的電腦，造成「完全沒有回覆」的死寂狀態。這些都需要手動介入重新啟動伺服器與通道才能解決。
 
 ---
 
